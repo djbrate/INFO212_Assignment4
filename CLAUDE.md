@@ -36,3 +36,4 @@ The techinal requirements for this project include:
 NOTATER:
 Front end languages: HTML, CSS, maybe Javascript
 Data Storage: JSON
+The Code follows MVC
