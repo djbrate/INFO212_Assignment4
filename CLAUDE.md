@@ -1,4 +1,7 @@
-The Code has two main parts: the "Admin panel" and "Customer Site", and this project is built on a previous working Flask Application.
+
+This project is built on a previous working Flask Application.
+
+The Code has two main parts: the "Admin panel" and "Customer Site".
 
 WHAT: 
 Admin panel (Ekte Mat staff): This consists of 4 main mechanics that should be available for "Ekte Mat" Staff to use. 
