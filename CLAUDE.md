@@ -1,13 +1,13 @@
 The Code has two main parts: the "Admin panel" and "Customer Site".
 
 WHAT: 
-Admin panel: This consists of 4 main mechanics that should be available for "Ekte Mat" Staff to use. 
+Admin panel (Ekte Mat staff): This consists of 4 main mechanics that should be available for "Ekte Mat" Staff to use. 
 1. Food items. Add, edit and remove the food Ekte Mat caters: name, description, price in NOK, minimum order quantity, event categories, allergens and dietary labels, and whether the item is published.
 2. Images. Upload a picture for each item, or write an instruction that an AI agent or image service uses to create or modify the picture. The admin previews the result before it is saved.
 3. Orders. A list of all customer orders that can be filtered by status and event date, and a page per order to manage it: order status (submitted → approved → in preparation → delivered, or rejected/cancelled) and payment status (e.g. not paid, deposit paid, invoiced, paid).
 4. Questions. Read and answer customers’ questions about their orders.
 
-Customer Site: 
+Customer Site (the published shop): 
 1. Menu by event. Food items as cards, grouped by kind of event: birthday, confirmation, wedding, conference, Christmas party (julebord) and so on. Each card shows picture, price, minimum order and allergens.
 2. Shopping cart. Add, change and remove items, with an estimated total cost. Quantities below an item’s minimum order are not accepted.
 3. Order. Log in (or register) and submit the order: event date, number of guests, delivery address, and allergy and dietary notes per guest group. No payment solution is needed.
@@ -25,6 +25,12 @@ Overall:
 
 
 HOW: 
+The techinal requirements for this project include:
+- Architecture: Model–View–Controller, with Flask as the backend. Models hold the domain classes and all data access, views are Jinja2 templates or a separate front end that calls a JSON API, and controllers are Flask routes grouped in blueprints (e.g. shop, account, admin). The three layers must be visible in your folder structure.
+- Front end: HTML, CSS and JavaScript if needed.
+- Data storage: Neo4j is the storage layer of the finished system (see the box below). For this assignment a temporary store such as SQLite or JSON files is fine, as long as only repository classes in the model layer touch it, so that Neo4j can later replace it without changes to controllers or views.
+- Security basics: Only customer login pages are fine.
+- Running it: synthetic data only. A seed script creates sample food items, an admin and test customers, and the README gives the commands to install, seed, run and test the application.
 
 
 NOTATER:
