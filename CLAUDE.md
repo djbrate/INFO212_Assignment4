@@ -20,8 +20,6 @@ Customer Site (the published shop):
 4. My orders. The customer’s own orders with their current status (submitted, approved, delivered, …) and payment status.
 5. Questions. Ask a question about a specific order and read Ekte Mat’s answer.
 
-Overall: 
-
 
 
 WHY: 
@@ -34,7 +32,7 @@ HOW:
 The techinal requirements for this project include:
 - Architecture: Model–View–Controller, with Flask as the backend. Models hold the domain classes and all data access, views are Jinja2 templates or a separate front end that calls a JSON API, and controllers are Flask routes grouped in blueprints (e.g. shop, account, admin). The three layers must be visible in your folder structure.
 - Front end: HTML, CSS and JavaScript if needed.
-- Data storage: Neo4j is the storage layer of the finished system (see the box below). For this assignment a temporary store such as SQLite or JSON files is fine, as long as only repository classes in the model layer touch it, so that Neo4j can later replace it without changes to controllers or views.
+- Data storage: Neo4j is the storage layer of the finished system.
 - Security basics: Only customer login pages are fine.While comming code on github – make sure that your project does not include Claude API key. Keep API keys in .env, Add .env to .gitignore and never commit secrets. 
 - Running it: synthetic data only. A seed script creates sample food items, an admin and test customers, and the README gives the commands to install, seed, run and test the application.
 
