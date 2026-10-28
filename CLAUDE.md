@@ -35,9 +35,3 @@ The techinal requirements for this project include:
 - Data storage: Neo4j is the storage layer of the finished system.
 - Security basics: Only customer login pages are fine.While comming code on github – make sure that your project does not include Claude API key. Keep API keys in .env, Add .env to .gitignore and never commit secrets. 
 - Running it: synthetic data only. A seed script creates sample food items, an admin and test customers, and the README gives the commands to install, seed, run and test the application.
-
-
-NOTATER:
-Front end languages: HTML, CSS, maybe Javascript
-Data Storage: JSON
-The Code follows MVC
