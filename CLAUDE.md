@@ -4,7 +4,7 @@ Context to the previous case: Ekte Mat AS is a small Bergen catering company tha
 
 
 
-The Code we will be working on now has two main parts: the "Admin panel" and "Customer Site".
+The Code we will be working on now has two main parts: the "Admin panel" and "Customer Site". It should also be possible to use the "go live" extension, so there should be a index.html.
 
 WHAT: 
 Admin panel (Ekte Mat staff): This consists of 4 main mechanics that should be available for "Ekte Mat" Staff to use. 
