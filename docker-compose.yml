@@ -11,6 +11,8 @@ services:
     environment:
       NEO4J_AUTH: "${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env}"
     volumes:
-      - ./neo4j/data:/data   # ignored by .gitignore
-      - ./neo4j/logs:/logs   # ignored by .gitignore
+      # Not "./neo4j/...": a folder called neo4j in the project root hides the
+      # neo4j Python driver ("cannot import name 'GraphDatabase'"). Ignored by .gitignore.
+      - ./.neo4j-data/data:/data
+      - ./.neo4j-data/logs:/logs
     restart: unless-stopped

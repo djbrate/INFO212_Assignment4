@@ -27,6 +27,7 @@ instance/
 *.sqlite3
 neo4j/data/
 neo4j/logs/
+.neo4j-data/
 
 # --- Uploaded / AI-generated item images (recreated by the seed script) ---
 uploads/
