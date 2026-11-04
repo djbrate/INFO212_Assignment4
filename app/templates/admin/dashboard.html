@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% set area = 'admin' %}
+{% block title %}Admin overview{% endblock %}
+{% block content %}
+<h1>Admin overview</h1>
+<div class="stat-row">
+  <a class="stat" href="{{ url_for('admin.orders', status='submitted') }}"><span class="stat-num">{{ new_orders|length }}</span> new orders to approve</a>
+  <a class="stat" href="{{ url_for('admin.questions', unanswered=1) }}"><span class="stat-num">{{ unanswered|length }}</span> unanswered questions</a>
+  <a class="stat" href="{{ url_for('admin.items') }}"><span class="stat-num">{{ item_count }}</span> food items</a>
+</div>
+
+<h2>Newest submitted orders</h2>
+{% if new_orders %}
+  <ul class="plain">
+    {% for o in new_orders[:5] %}
+      <li><a href="{{ url_for('admin.order_detail', order_no=o.order_no) }}">{{ o.order_no }}</a> · event {{ o.event_date|isodate }} · {{ o.guests }} guests · {{ o.total|nok }}</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="muted">No orders waiting.</p>
+{% endif %}
+{% endblock %}

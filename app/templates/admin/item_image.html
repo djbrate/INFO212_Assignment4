@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "_macros.html" import item_picture %}
+{% set area = 'admin' %}
+{% block title %}Picture for {{ item.name }}{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('admin.items') }}">← Food items</a></p>
+<h1>Picture for {{ item.name }}</h1>
+<div class="two-col">
+  <div>
+    <h2>Current picture</h2>
+    {{ item_picture(item, 'preview-img') }}
+  </div>
+  <div>
+    <h2>Upload a picture</h2>
+    <form class="form" method="post" enctype="multipart/form-data" action="{{ url_for('admin.item_image_upload', item_id=item.id) }}">
+      <label>PNG, JPG or WEBP, at most 5 MB <input type="file" name="picture" accept=".png,.jpg,.jpeg,.webp" required></label>
+      <button class="btn btn-primary" type="submit">Upload and preview</button>
+    </form>
+
+    <h2>Or describe the picture</h2>
+    <form class="form" method="post" action="{{ url_for('admin.item_image_generate', item_id=item.id) }}">
+      <label>Instruction for the image service
+        <textarea name="instruction" rows="3" required placeholder="e.g. Fish soup in a white bowl on a rustic wooden table, daylight"></textarea>
+      </label>
+      {% if item.image_path %}
+        <label class="check"><input type="radio" name="mode" value="new" checked> Create a new picture</label>
+        <label class="check"><input type="radio" name="mode" value="modify"> Modify the current picture</label>
+      {% endif %}
+      <button class="btn btn-primary" type="submit">Create and preview</button>
+    </form>
+    <p class="muted small">You always see a preview first. Nothing is saved until you confirm.</p>
+  </div>
+</div>
+{% endblock %}

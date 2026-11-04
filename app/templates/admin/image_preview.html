@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% set area = 'admin' %}
+{% block title %}Preview picture{% endblock %}
+{% block content %}
+<h1>Preview picture for {{ item.name }}</h1>
+<img class="preview-img" src="{{ url_for('media', filename=preview_path) }}" alt="Preview for {{ item.name }}">
+<div class="actions">
+  <form class="inline" method="post" action="{{ url_for('admin.item_image_confirm', item_id=item.id) }}">
+    <input type="hidden" name="token" value="{{ token }}">
+    <button class="btn btn-primary" type="submit">Save this picture</button>
+  </form>
+  <form class="inline" method="post" action="{{ url_for('admin.item_image_discard', item_id=item.id) }}">
+    <input type="hidden" name="token" value="{{ token }}">
+    <button class="btn btn-ghost" type="submit">Discard and try again</button>
+  </form>
+</div>
+{% endblock %}

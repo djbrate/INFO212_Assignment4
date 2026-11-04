@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge, payment_badge %}
+{% block title %}My orders{% endblock %}
+{% block content %}
+<h1>My orders</h1>
+{% if orders %}
+  <table class="table">
+    <thead><tr><th>Order</th><th>Event date</th><th class="num">Guests</th><th class="num">Estimated total</th><th>Status</th><th>Payment</th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+        <tr>
+          <td><a href="{{ url_for('account.order_detail', order_no=o.order_no) }}">{{ o.order_no }}</a></td>
+          <td>{{ o.event_date|isodate }}</td>
+          <td class="num">{{ o.guests }}</td>
+          <td class="num">{{ o.total|nok }}</td>
+          <td>{{ status_badge(o.status) }}</td>
+          <td>{{ payment_badge(o.payment_status) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>You have no orders yet. <a href="{{ url_for('shop.menu') }}">See the menu</a>.</p>
+{% endif %}
+{% endblock %}

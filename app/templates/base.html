@@ -1,0 +1,59 @@
+{#- Shared layout for the customer site and the admin panel (requirements NFR-2a). -#}
+{%- set area = area|default('shop') -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Ekte Mat Online{% endblock %} · Ekte Mat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body class="area-{{ area }}">
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="{{ url_for('shop.home') }}">Ekte Mat <span>Online</span></a>
+    <nav class="nav" aria-label="Main">
+      {% if area == 'admin' %}
+        <span class="area-tag">Admin panel</span>
+        <a href="{{ url_for('admin.dashboard') }}">Overview</a>
+        <a href="{{ url_for('admin.items') }}">Food items</a>
+        <a href="{{ url_for('admin.orders') }}">Orders</a>
+        <a href="{{ url_for('admin.questions') }}">Questions</a>
+        <a class="nav-switch" href="{{ url_for('shop.menu') }}">View shop →</a>
+      {% else %}
+        <a href="{{ url_for('shop.menu') }}">Menu</a>
+        <a href="{{ url_for('shop.cart') }}">Cart{% if cart_count %} <span class="pill">{{ cart_count }}</span>{% endif %}</a>
+        {% if current_customer %}
+          <a href="{{ url_for('account.orders') }}">My orders</a>
+          <form class="inline" method="post" action="{{ url_for('account.logout') }}">
+            <button class="linklike" type="submit">Log out ({{ current_customer.name }})</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('account.login') }}">Log in</a>
+          <a href="{{ url_for('account.register') }}">Register</a>
+        {% endif %}
+        <a class="nav-switch" href="{{ url_for('admin.dashboard') }}">Staff →</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flashes" role="status">
+        {% for category, message in messages %}
+          <p class="flash flash-{{ category }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <div class="wrap">Ekte Mat AS · Bergen · INFO212 student project · synthetic data only</div>
+</footer>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from "_macros.html" import allergen_list, dietary_list, item_picture %}
+{% block title %}Menu{% endblock %}
+{% block content %}
+<h1>Menu by event</h1>
+
+<nav class="tabs" aria-label="Event categories">
+  <a href="{{ url_for('shop.menu') }}" class="{{ 'active' if not selected }}">All events</a>
+  {% for c in categories %}
+    <a href="{{ url_for('shop.menu', event=c.slug) }}" class="{{ 'active' if selected == c.slug }}">{{ c.name }}</a>
+  {% endfor %}
+</nav>
+
+{% for category, items in groups %}
+  <section class="menu-group" id="{{ category.slug if category else 'other-items' }}">
+    <h2>{{ category.name if category else 'More dishes' }}</h2>
+    <div class="card-grid">
+      {% for item in items %}
+        <article class="card">
+          {{ item_picture(item) }}
+          <div class="card-body">
+            <h3>{{ item.name }}</h3>
+            <p class="desc">{{ item.description }}</p>
+            <p class="price"><strong>{{ item.price_nok|nok }}</strong> per portion · minimum {{ item.min_order }}</p>
+            {{ allergen_list(item) }}
+            {{ dietary_list(item) }}
+            <form class="add-form" method="post" action="{{ url_for('shop.cart_add') }}">
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <input type="hidden" name="back" value="{{ request.full_path }}">
+              <label>Quantity
+                <input type="number" name="quantity" min="{{ item.min_order }}" step="1" value="{{ item.min_order }}" required>
+              </label>
+              <button class="btn btn-primary" type="submit">Add to cart</button>
+            </form>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% else %}
+  <p class="muted">There are no published dishes{% if selected %} for this event{% endif %} yet.</p>
+{% endfor %}
+{% endblock %}

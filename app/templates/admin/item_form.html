@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% set area = 'admin' %}
+{% set editing = item is not none and item.id %}
+{% block title %}{{ 'Edit' if editing else 'New' }} food item{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('admin.items') }}">← Food items</a></p>
+<h1>{{ 'Edit ' ~ item.name if editing else 'New food item' }}</h1>
+<form class="form" method="post"
+      action="{{ url_for('admin.item_edit', item_id=item.id) if editing else url_for('admin.item_new') }}">
+  <label>Name <input name="name" value="{{ item.name if item else '' }}" required></label>
+  <label>Description <textarea name="description" rows="3">{{ item.description if item else '' }}</textarea></label>
+  <div class="field-row">
+    <label>Price per portion (NOK) <input type="number" name="price_nok" min="1" step="1" value="{{ item.price_nok if item else '' }}" required></label>
+    <label>Minimum order <input type="number" name="min_order" min="1" step="1" value="{{ item.min_order if item else 1 }}" required></label>
+  </div>
+
+  <fieldset>
+    <legend>Event categories</legend>
+    {% for c in categories %}
+      <label class="check"><input type="checkbox" name="categories" value="{{ c.slug }}"
+        {{ 'checked' if item and c.slug in item.categories }}> {{ c.name }}</label>
+    {% endfor %}
+  </fieldset>
+
+  <fieldset>
+    <legend>Allergens</legend>
+    {% for a in allergens %}
+      <label class="check"><input type="checkbox" name="allergens" value="{{ a.value }}"
+        {{ 'checked' if item and a in item.allergens }}> {{ a.label }}</label>
+    {% endfor %}
+  </fieldset>
+
+  <fieldset>
+    <legend>Dietary labels</legend>
+    {% for d in dietary_labels %}
+      <label class="check"><input type="checkbox" name="dietary_labels" value="{{ d.value }}"
+        {{ 'checked' if item and d in item.dietary_labels }}> {{ d.label }}</label>
+    {% endfor %}
+  </fieldset>
+
+  <label class="check"><input type="checkbox" name="published" {{ 'checked' if item and item.published }}> Published (shown on the customer site)</label>
+  <button class="btn btn-primary" type="submit">Save</button>
+</form>
+{% endblock %}

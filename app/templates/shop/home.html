@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Authentic, seasonal food for your event</h1>
+  <p>Order catering from Ekte Mat in Bergen for corporate lunches, parties, confirmations, weddings and more.
+     Choose your dishes, tell us about allergies, and follow your order online.</p>
+  <a class="btn btn-primary" href="{{ url_for('shop.menu') }}">See the menu</a>
+</section>
+
+<h2>Choose your event</h2>
+<ul class="category-grid">
+  {% for c in categories %}
+    <li><a class="category-tile" href="{{ url_for('shop.menu', event=c.slug) }}">{{ c.name }}</a></li>
+  {% else %}
+    <li class="muted">No event categories yet. Run <code>python seed.py</code>.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+<h1>Shopping cart</h1>
+{% if lines %}
+  <form method="post" action="{{ url_for('shop.cart_update') }}" id="cart-form">
+    <table class="table">
+      <thead><tr><th>Item</th><th class="num">Price</th><th class="num">Quantity</th><th class="num">Line total</th><th></th></tr></thead>
+      <tbody>
+        {% for line in lines %}
+          <tr>
+            <td>{{ line.item.name }}<br><small class="muted">minimum {{ line.item.min_order }}</small></td>
+            <td class="num">{{ line.item.price_nok|nok }}</td>
+            <td class="num"><input class="qty" type="number" name="qty_{{ line.item.id }}" value="{{ line.quantity }}"
+                                   min="{{ line.item.min_order }}" step="1" required aria-label="Quantity of {{ line.item.name }}"></td>
+            <td class="num">{{ line.line_total|nok }}</td>
+            <td><button class="btn btn-small btn-ghost" type="submit" form="remove-{{ line.item.id }}">Remove</button></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot><tr><th colspan="3">Estimated total</th><th class="num">{{ total|nok }}</th><th></th></tr></tfoot>
+    </table>
+    <div class="actions">
+      <button class="btn" type="submit">Update quantities</button>
+      <a class="btn btn-primary" href="{{ url_for('account.checkout') }}">Continue to order</a>
+    </div>
+  </form>
+  {% for line in lines %}
+    <form id="remove-{{ line.item.id }}" method="post" action="{{ url_for('shop.cart_remove', item_id=line.item.id) }}"></form>
+  {% endfor %}
+  <p class="muted">The total is an estimate. No payment is taken online; Ekte Mat confirms the order and the payment details.</p>
+{% else %}
+  <p>Your cart is empty. <a href="{{ url_for('shop.menu') }}">See the menu</a>.</p>
+{% endif %}
+{% endblock %}

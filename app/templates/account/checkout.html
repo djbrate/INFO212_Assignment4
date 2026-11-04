@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Submit order{% endblock %}
+{% block content %}
+<h1>Submit your order</h1>
+<div class="two-col">
+  <form class="form" method="post">
+    <label>Event date (YYYY-MM-DD)
+      <input type="date" name="event_date" value="{{ form.get('event_date', '') }}" required>
+    </label>
+    <label>Number of guests
+      <input type="number" name="guests" min="1" max="{{ max_guests }}" step="1" value="{{ form.get('guests', '') }}" required>
+    </label>
+    <label>Delivery address
+      <textarea name="delivery_address" rows="3" required>{{ form.get('delivery_address', '') }}</textarea>
+    </label>
+
+    <fieldset>
+      <legend>Allergies and dietary needs per guest group</legend>
+      <p class="muted small">Write one group per row, for example "nut allergy" and 2. Please do not write guests' names.</p>
+      <div id="note-rows">
+        {% set labels = form.getlist('note_label') if form.getlist is defined else [] %}
+        {% set counts = form.getlist('note_count') if form.getlist is defined else [] %}
+        {% for i in range([labels|length, 3]|max) %}
+          <div class="note-row">
+            <input name="note_label" placeholder="e.g. vegan" value="{{ labels[i] if i < labels|length else '' }}" aria-label="Allergy or diet">
+            <input name="note_count" type="number" min="1" step="1" placeholder="guests" value="{{ counts[i] if i < counts|length else '' }}" aria-label="Number of guests">
+          </div>
+        {% endfor %}
+      </div>
+      <button class="btn btn-small btn-ghost" type="button" id="add-note-row">+ Add another group</button>
+    </fieldset>
+
+    <p class="muted small">No payment is taken now. Your order starts as <em>submitted</em> and <em>not paid</em>.</p>
+    <button class="btn btn-primary" type="submit">Submit order</button>
+  </form>
+
+  <aside class="summary">
+    <h2>Your cart</h2>
+    <ul class="plain">
+      {% for line in lines %}<li>{{ line.item.name }} × {{ line.quantity }} <span class="num">{{ line.line_total|nok }}</span></li>{% endfor %}
+    </ul>
+    <p><strong>Estimated total: {{ total|nok }}</strong></p>
+    <a href="{{ url_for('shop.cart') }}">Change cart</a>
+  </aside>
+</div>
+{% endblock %}

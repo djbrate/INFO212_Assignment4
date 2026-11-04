@@ -1,0 +1,72 @@
+{% macro status_badge(status) -%}
+  <span class="badge status-{{ status.value }}">{{ status.label }}</span>
+{%- endmacro %}
+
+{% macro payment_badge(status) -%}
+  <span class="badge pay-{{ status.value }}">{{ status.label }}</span>
+{%- endmacro %}
+
+{% macro allergen_list(item) -%}
+  {% if item.allergens %}
+    <p class="allergens"><strong>Allergens:</strong>
+      {% for a in item.allergens %}<span class="chip chip-allergen">{{ a.label }}</span>{% endfor %}
+    </p>
+  {% else %}
+    <p class="allergens muted">No listed allergens</p>
+  {% endif %}
+{%- endmacro %}
+
+{% macro dietary_list(item) -%}
+  {% if item.dietary_labels %}
+    <p class="dietary">{% for d in item.dietary_labels %}<span class="chip chip-diet">{{ d.label }}</span>{% endfor %}</p>
+  {% endif %}
+{%- endmacro %}
+
+{% macro item_picture(item, cls='card-img') -%}
+  {% if item.image_path %}
+    <img class="{{ cls }}" src="{{ url_for('media', filename=item.image_path) }}" alt="{{ item.name }}">
+  {% else %}
+    <div class="{{ cls }} img-missing" aria-hidden="true">No picture yet</div>
+  {% endif %}
+{%- endmacro %}
+
+{% macro guest_notes(order) -%}
+  {#- FR-A3.5: allergy and dietary notes highlighted so they cannot be missed -#}
+  {% if order.notes %}
+    <div class="allergy-box">
+      <h3>Allergies and dietary needs</h3>
+      <ul>
+        {% for n in order.notes %}<li><strong>{{ n.label }}</strong> × {{ n.count }}</li>{% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <p class="muted">No allergy or dietary notes.</p>
+  {% endif %}
+{%- endmacro %}
+
+{% macro order_lines(order) -%}
+  <table class="table">
+    <thead><tr><th>Item</th><th class="num">Quantity</th><th class="num">Unit price</th><th class="num">Line total</th></tr></thead>
+    <tbody>
+      {% for i in order.items %}
+        <tr><td>{{ i.name }}</td><td class="num">{{ i.quantity }}</td><td class="num">{{ i.unit_price|nok }}</td><td class="num">{{ i.line_total|nok }}</td></tr>
+      {% endfor %}
+    </tbody>
+    <tfoot><tr><th colspan="3">Estimated total</th><th class="num">{{ order.total|nok }}</th></tr></tfoot>
+  </table>
+{%- endmacro %}
+
+{% macro question_thread(q) -%}
+  <article class="question">
+    <p class="q-meta">Question · {{ q.created_at|isodate }}</p>
+    <p class="q-text">{{ q.text }}</p>
+    {% if q.answer %}
+      <div class="answer">
+        <p class="q-meta">Answer from Ekte Mat · {{ q.answer.created_at|isodate }}</p>
+        <p>{{ q.answer.text }}</p>
+      </div>
+    {% else %}
+      <p class="badge badge-wait">Waiting for an answer</p>
+    {% endif %}
+  </article>
+{%- endmacro %}

@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  Static start page for the VS Code "Go Live" extension (CLAUDE.md; requirements NFR-2).
+  Go Live only serves static files, so this page links to the Flask app, which
+  must be running at http://localhost:5000 (see README.MD).
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ekte Mat Online</title>
+  <style>
+    body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #2b2620; background: #faf7f2; }
+    header { background: #2f5d50; color: #fff; padding: 1rem 16px; font-weight: 700; font-size: 1.25rem; }
+    main { max-width: 760px; margin: 0 auto; padding: 1.5rem 16px 3rem; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    a.card { display: block; background: #fff; border-radius: 10px; padding: 1.2rem; text-decoration: none; color: inherit;
+             box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 4px 14px rgba(0,0,0,.05); border: 1px solid #e4ddd2; }
+    a.card:hover { border-color: #2f5d50; }
+    a.card strong { display: block; color: #2f5d50; font-size: 1.1rem; }
+    code, pre { background: #f0ebe3; border-radius: 6px; }
+    code { padding: 0 .3em; }
+    pre { padding: .8rem 1rem; overflow-x: auto; }
+    #status { padding: .6rem .9rem; border-radius: 10px; background: #fff3d6; color: #6b4a00; }
+    #status.up { background: #e4f3ea; color: #1d5a36; }
+  </style>
+</head>
+<body>
+<header>Ekte Mat <span style="font-weight:400;opacity:.8">Online</span></header>
+<main>
+  <h1>Welcome to Ekte Mat Online</h1>
+  <p>Authentic, seasonal catering from Bergen. Choose where to go:</p>
+  <p id="status">Checking whether the Flask app is running at <code>http://localhost:5000</code> …</p>
+  <div class="cards">
+    <a class="card" href="http://localhost:5000/menu"><strong>Customer site →</strong>Menu by event, cart, ordering and your orders.</a>
+    <a class="card" href="http://localhost:5000/admin/"><strong>Admin panel →</strong>Food items, pictures, orders and questions.</a>
+  </div>
+  <h2>Start the app</h2>
+  <pre>docker compose up -d
+python seed.py
+flask --app run run</pre>
+  <p>See <code>README.MD</code> for the full instructions.</p>
+</main>
+<script>
+  // Show whether the Flask app answers. "no-cors" only tells us that something is listening.
+  fetch("http://localhost:5000/", { mode: "no-cors" })
+    .then(function () {
+      var s = document.getElementById("status");
+      s.textContent = "The Flask app is running. Use the links below.";
+      s.className = "up";
+    })
+    .catch(function () {
+      document.getElementById("status").textContent =
+        "The Flask app is not running yet. Start it with the commands below, then reload this page.";
+    });
+</script>
+</body>
+</html>

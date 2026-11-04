@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set area = 'admin' %}
+{% block title %}Questions{% endblock %}
+{% block content %}
+<h1>Customer questions</h1>
+<nav class="tabs">
+  <a href="{{ url_for('admin.questions') }}" class="{{ 'active' if not unanswered_only }}">All</a>
+  <a href="{{ url_for('admin.questions', unanswered=1) }}" class="{{ 'active' if unanswered_only }}">Unanswered</a>
+</nav>
+{% for q in questions %}
+  <article class="question">
+    <p class="q-meta">
+      <a href="{{ url_for('admin.order_detail', order_no=q.order_no) }}">Order {{ q.order_no }}</a> · {{ q.created_at|isodate }}
+      {% if not q.answer %}<span class="badge badge-wait">Unanswered</span>{% endif %}
+    </p>
+    <p class="q-text">{{ q.text }}</p>
+    {% if q.answer %}
+      <div class="answer"><p class="q-meta">Answer · {{ q.answer.created_at|isodate }}</p><p>{{ q.answer.text }}</p></div>
+    {% else %}
+      <form class="form" method="post" action="{{ url_for('admin.answer_question', question_id=q.id) }}">
+        <input type="hidden" name="back" value="{{ request.full_path }}">
+        <label>Answer <textarea name="text" rows="2" maxlength="2000" required></textarea></label>
+        <button class="btn btn-primary" type="submit">Send answer</button>
+      </form>
+    {% endif %}
+  </article>
+{% else %}
+  <p class="muted">No questions{% if unanswered_only %} waiting for an answer{% endif %}.</p>
+{% endfor %}
+{% endblock %}

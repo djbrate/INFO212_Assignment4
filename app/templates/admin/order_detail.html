@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge, payment_badge, order_lines, guest_notes %}
+{% set area = 'admin' %}
+{% block title %}Order {{ order.order_no }}{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('admin.orders') }}">← Orders</a></p>
+<h1>Order {{ order.order_no }}</h1>
+
+{{ guest_notes(order) }}
+
+<dl class="facts">
+  <div><dt>Customer</dt><dd>{{ customer.name if customer else '–' }}{% if customer %}<br><small>{{ customer.email }}</small>{% endif %}</dd></div>
+  <div><dt>Event date</dt><dd>{{ order.event_date|isodate }}</dd></div>
+  <div><dt>Guests</dt><dd>{{ order.guests }}</dd></div>
+  <div><dt>Delivery address</dt><dd>{{ order.delivery_address }}</dd></div>
+  <div><dt>Ordered</dt><dd>{{ order.created_at|isodate }}</dd></div>
+</dl>
+
+{{ order_lines(order) }}
+
+<div class="two-col">
+  <section class="panel">
+    <h2>Order status: {{ status_badge(order.status) }}</h2>
+    {% if order.allowed_next_statuses() %}
+      <form class="inline-form" method="post" action="{{ url_for('admin.order_status', order_no=order.order_no) }}">
+        <label>Change to
+          <select name="status">
+            {% for s in order.allowed_next_statuses() %}<option value="{{ s.value }}">{{ s.label }}</option>{% endfor %}
+          </select>
+        </label>
+        <button class="btn btn-primary" type="submit">Update status</button>
+      </form>
+    {% else %}
+      <p class="muted">This status is final.</p>
+    {% endif %}
+  </section>
+  <section class="panel">
+    <h2>Payment: {{ payment_badge(order.payment_status) }}</h2>
+    <form class="inline-form" method="post" action="{{ url_for('admin.order_payment', order_no=order.order_no) }}">
+      <label>Set to
+        <select name="payment_status">
+          {% for value, label in PaymentStatus.choices() %}
+            <option value="{{ value }}" {{ 'selected' if order.payment_status.value == value }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button class="btn" type="submit">Save payment status</button>
+    </form>
+    <p class="muted small">Recorded by hand. The system takes no payments.</p>
+  </section>
+</div>
+
+<section class="questions" id="questions">
+  <h2>Questions from the customer</h2>
+  {% for q in questions %}
+    <article class="question">
+      <p class="q-meta">Question · {{ q.created_at|isodate }}</p>
+      <p class="q-text">{{ q.text }}</p>
+      {% if q.answer %}
+        <div class="answer"><p class="q-meta">Your answer · {{ q.answer.created_at|isodate }}</p><p>{{ q.answer.text }}</p></div>
+      {% else %}
+        <form class="form" method="post" action="{{ url_for('admin.answer_question', question_id=q.id) }}">
+          <input type="hidden" name="back" value="{{ url_for('admin.order_detail', order_no=order.order_no) }}#questions">
+          <label>Answer <textarea name="text" rows="3" maxlength="2000" required></textarea></label>
+          <button class="btn btn-primary" type="submit">Send answer</button>
+        </form>
+      {% endif %}
+    </article>
+  {% else %}
+    <p class="muted">No questions about this order.</p>
+  {% endfor %}
+</section>
+{% endblock %}

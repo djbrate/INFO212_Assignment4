@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge, payment_badge %}
+{% set area = 'admin' %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<h1>Orders</h1>
+<form class="filters" method="get">
+  <label>Status
+    <select name="status">
+      <option value="">All</option>
+      {% for value, label in OrderStatus.choices() %}
+        <option value="{{ value }}" {{ 'selected' if filters.status == value }}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Event date from <input type="date" name="date_from" value="{{ filters.date_from }}"></label>
+  <label>to <input type="date" name="date_to" value="{{ filters.date_to }}"></label>
+  <button class="btn" type="submit">Filter</button>
+  <a class="btn btn-ghost" href="{{ url_for('admin.orders') }}">Clear</a>
+</form>
+
+{% if orders %}
+  <table class="table">
+    <thead><tr><th>Order</th><th>Event date</th><th>Customer</th><th class="num">Guests</th><th class="num">Estimated total</th><th>Allergies</th><th>Status</th><th>Payment</th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+        {% set c = customers.get(o.customer_id) %}
+        <tr>
+          <td><a href="{{ url_for('admin.order_detail', order_no=o.order_no) }}">{{ o.order_no }}</a></td>
+          <td>{{ o.event_date|isodate }}</td>
+          <td>{{ c.name if c else '–' }}</td>
+          <td class="num">{{ o.guests }}</td>
+          <td class="num">{{ o.total|nok }}</td>
+          <td>{% if o.notes %}<span class="badge badge-allergy">{{ o.notes|length }} note{{ 's' if o.notes|length > 1 }}</span>{% endif %}</td>
+          <td>{{ status_badge(o.status) }}</td>
+          <td>{{ payment_badge(o.payment_status) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="muted">No orders match the filter.</p>
+{% endif %}
+{% endblock %}
