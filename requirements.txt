@@ -1,0 +1,6 @@
+# Ekte Mat Online – Python dependencies (CLAUDE.md, HOW; docs/implementation_plan.md, Phase 0)
+Flask>=3.1,<4            # web framework (MVC controllers + Jinja2 views)
+neo4j>=5.28,<6           # official Neo4j Python driver (storage layer, NFR-3)
+python-dotenv>=1.0       # loads settings and secrets from .env (NFR-5)
+Pillow>=11.0             # placeholder images from StubImageService (FR-A2.2)
+pytest>=8.3              # test suite (NFR-8)
